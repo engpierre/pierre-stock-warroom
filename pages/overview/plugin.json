@@ -1,0 +1,8 @@
+{
+  "id": "overview",
+  "name": "System Overview",
+  "description": "OpenClaw Node & Tactical Swarm Telemetry Hub",
+  "icon": "activity",
+  "order": 2,
+  "version": "1.0.0"
+}

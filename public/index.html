@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIERRE STOCK WAR ROOM // OPENCLAW DASHBOARD</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/vendor/d3/d3.min.js"></script>
+</head>
+<body class="warroom-body">
+  <div class="shell-layout">
+    <!-- Top Navigation Bar -->
+    <header class="top-nav">
+      <div class="brand-group">
+        <div class="brand-logo">⚔️</div>
+        <div class="brand-text">
+          <span class="brand-title">PIERRE STOCK WAR ROOM</span>
+          <span class="brand-sub">OPENCLAW TACTICAL MATRIX</span>
+        </div>
+      </div>
+
+      <nav class="plugin-tabs" id="plugin-tabs-container">
+        <!-- Dynamically injected plugin buttons -->
+      </nav>
+
+      <div class="nav-telemetry">
+        <div class="telemetry-item">
+          <span class="telemetry-label">GATEWAY</span>
+          <span class="telemetry-val live" id="gw-status">ONLINE</span>
+        </div>
+        <div class="telemetry-item">
+          <span class="telemetry-label">UTC TIME</span>
+          <span class="telemetry-val" id="live-clock">--:--:--</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Viewport for Active Plugin -->
+    <main class="page-viewport">
+      <iframe id="plugin-frame" src="/pages/overview" frameborder="0"></iframe>
+    </main>
+  </div>
+
+  <script src="/js/shell.js"></script>
+</body>
+</html>

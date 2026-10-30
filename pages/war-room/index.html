@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pierre Stock War Room</title>
+  <link rel="stylesheet" href="/pages/war-room/style.css">
+  <script src="/vendor/d3/d3.min.js"></script>
+</head>
+<body class="warroom-plugin-body">
+  <div class="warroom-wrapper">
+    
+    <!-- Top Portfolio Executive Ribbon -->
+    <header class="executive-ribbon">
+      <div class="ribbon-metric primary">
+        <span class="metric-label">TOTAL PORTFOLIO EQUITY</span>
+        <span class="metric-value text-glow-cyan" id="total-equity">$0.00</span>
+        <span class="metric-sub" id="equity-sub">0 Active Positions</span>
+      </div>
+
+      <div class="ribbon-metric">
+        <span class="metric-label">ACTIVE / WATCHLIST</span>
+        <div class="metric-value-row">
+          <span class="text-emerald" id="owned-count">0</span>
+          <span class="metric-divider">/</span>
+          <span class="text-cyan" id="watchlist-count">40</span>
+        </div>
+        <span class="metric-sub">40 Monitored Assets</span>
+      </div>
+
+      <div class="ribbon-metric" id="metric-sentinel">
+        <span class="metric-label">SWARM SENTINEL STATUS</span>
+        <span class="metric-value text-purple" id="sentiment-status">
+          <span class="status-dot green"></span> ONLINE
+        </span>
+        <span class="metric-sub" id="scan-sub">Passive Sentiment Daemon</span>
+      </div>
+
+      <div class="ribbon-metric">
+        <span class="metric-label">MARKET SPOT FEED</span>
+        <span class="metric-value text-amber" id="feed-status">
+          <span class="status-dot green"></span> YAHOO v8
+        </span>
+        <span class="metric-sub" id="cache-age-display">Cache: 0s ago</span>
+      </div>
+
+      <div class="ribbon-actions">
+        <button id="refresh-btn" class="tactical-btn" title="Force Refresh Quotes">
+          <span class="btn-icon">↻</span> REFRESH
+        </button>
+        <button id="add-ticker-btn" class="tactical-btn text-cyan" title="Add Ticker to Universe">
+          <span class="btn-icon">➕</span> ADD TICKER
+        </button>
+        <button id="zero-shares-btn" class="tactical-btn text-amber" title="Reset All Positions to 0 Shares">
+          <span class="btn-icon">🧹</span> ZERO SHARES
+        </button>
+      </div>
+    </header>
+
+    <!-- Global Live Scan Banner (Visible during background harvest) -->
+    <div id="live-scan-banner" class="scan-banner hidden">
+      <div class="banner-spinner"></div>
+      <div class="banner-info">
+        <span class="banner-title" id="banner-cluster-name">⚡ SENTIMENT SCAN IN PROGRESS</span>
+        <span class="banner-tickers" id="banner-tickers-list">Scanning assets...</span>
+      </div>
+      <div class="banner-timer" id="banner-elapsed">0.0s</div>
+    </div>
+
+    <!-- Filter & Control Toolbar -->
+    <div class="control-toolbar">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="ticker-search" placeholder="Search ticker or name (e.g. META, OXY, Nuclear)...">
+      </div>
+
+      <div class="filter-pills" id="cluster-filter-pills">
+        <button class="filter-pill active" data-filter="all">ALL (40)</button>
+        <button class="filter-pill" data-filter="owned">PORTFOLIO (<span id="pill-owned-count">0</span>)</button>
+        <button class="filter-pill" data-filter="watchlist">WATCHLIST (<span id="pill-watch-count">40</span>)</button>
+      </div>
+    </div>
+
+    <!-- 3-Column Tactical Command Deck & Live Agent Constellation -->
+    <section class="scene-panel command-deck-panel">
+      <!-- Tile 1 (Left): Julie Reactive Core & Quick Actions -->
+      <div class="deck-col col-julie-core">
+        <div class="col-header">
+          <div class="julie-status-pill">
+            <span class="status-dot green" id="julie-dot"></span>
+            <span class="julie-pill-label">JULIE-CORE // GEMMA4:26B</span>
+          </div>
+          <button id="julie-mute-btn" class="julie-mute-toggle" title="Toggle Julie Voice Output">
+            <span id="mute-icon">🔊</span>
+          </button>
+        </div>
+
+        <!-- 60 FPS Reactive Energy Orb -->
+        <div class="orb-container">
+          <canvas id="julie-orb-canvas" width="160" height="160"></canvas>
+          <div class="orb-state-label" id="orb-state-label">IDLE // STANDBY</div>
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="julie-actions-bar">
+          <button id="julie-mic-btn" class="deck-btn mic-btn" title="Push to Talk (Web Speech STT)">
+            <span class="btn-icon">🎙️</span> Push to Talk
+          </button>
+          <button id="julie-brief-btn" class="deck-btn brief-btn" title="Executive Morning Flight Check">
+            <span class="btn-icon">☀️</span> Morning Brief
+          </button>
+          <button id="julie-forecast-btn" class="deck-btn forecast-btn" title="Run Local GPU TimesFM / Chronos Forecast Across Active Holdings">
+            <span class="btn-icon">🧠</span> Run GPU Forecast
+          </button>
+        </div>
+
+        <!-- Quick Vault Recon Ticker Dropdown -->
+        <div class="quick-recon-row">
+          <select id="quick-recon-select" class="deck-select">
+            <option value="" disabled selected>🎯 Select Asset Recon...</option>
+            <!-- Injected dynamically with 40 tickers -->
+          </select>
+          <button id="quick-recon-btn" class="deck-btn-sm" title="Pull Vault Recon Dossier">
+            RECON
+          </button>
+        </div>
+      </div>
+
+      <!-- Tile 2 (Center): Live Comms & Recon Terminal -->
+      <div class="deck-col col-comms-terminal">
+        <div class="col-header">
+          <div class="panel-title">
+            <span class="icon">💬</span> LIVE COMMS &amp; RECON TERMINAL
+          </div>
+          <span class="terminal-badge" id="terminal-status-badge">ONLINE</span>
+        </div>
+
+        <div class="terminal-feed" id="julie-terminal-feed">
+          <div class="terminal-msg julie-welcome">
+            <div class="msg-header">
+              <span class="msg-sender">JULIE</span>
+              <span class="msg-time">SYSTEM READY</span>
+            </div>
+            <div class="msg-body">
+              Good day, Pierre. Stock War Room initialized with 40 tracked assets across 8 thematic clusters. Press <strong>[Push to Talk]</strong>, request an <strong>[Executive Morning Brief]</strong>, or pick an asset for <strong>[Vault Recon]</strong>.
+            </div>
+          </div>
+        </div>
+
+        <!-- Terminal Input Bar -->
+        <form id="julie-chat-form" class="terminal-input-bar">
+          <input 
+            type="text" 
+            id="julie-chat-input" 
+            class="terminal-input" 
+            placeholder="Ask Julie, request Recon, or command OpenClaw..." 
+            autocomplete="off">
+          <button type="submit" id="julie-send-btn" class="terminal-send-btn" title="Send Directive">
+            SEND ⏎
+          </button>
+        </form>
+      </div>
+
+      <!-- Tile 3 (Extreme Right): D3 Cluster Constellation & Radar -->
+      <div class="deck-col col-constellation">
+        <div class="col-header">
+          <div class="panel-title">
+            <span class="icon">🌌</span> 8-CLUSTER CONSTELLATION &amp; RADAR
+          </div>
+          <div class="panel-legend">
+            <span class="legend-item"><span class="dot green"></span> Bullish</span>
+            <span class="legend-item"><span class="dot amber"></span> Steady</span>
+            <span class="legend-item"><span class="dot cyan"></span> Unscanned</span>
+            <span class="legend-item"><span class="dot pulse-radar"></span> Scanning</span>
+          </div>
+        </div>
+        <div id="d3-swarm-canvas"></div>
+      </div>
+    </section>
+
+    <!-- 8 Thematic Clusters Matrix -->
+    <main class="clusters-matrix" id="clusters-container">
+      <!-- Injected dynamically by client.js with [⚡ Scan Cluster] buttons -->
+    </main>
+
+    <!-- Toast Notification for Share Updates & Scans -->
+    <div id="save-toast" class="save-toast">Position updated</div>
+
+    <!-- Dynamic Universe Manager: Add Ticker Modal -->
+    <div id="add-ticker-modal" class="cyber-modal-overlay hidden">
+      <div class="cyber-modal">
+        <div class="modal-header">
+          <span class="modal-title">⚡ UNIVERSE MANAGER // ADD TICKER</span>
+          <button id="modal-close-btn" class="modal-close-btn" title="Close">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-form-group">
+            <label class="modal-label">TICKER SYMBOL</label>
+            <input type="text" id="modal-ticker-input" class="modal-input" placeholder="e.g. TSLA, ARM, PLTR" maxlength="12" />
+          </div>
+          <div class="modal-form-group">
+            <label class="modal-label">TARGET THEMATIC CLUSTER</label>
+            <select id="modal-cluster-select" class="modal-select">
+              <option value="1">Cluster 1: Defense &amp; Government Contracts</option>
+              <option value="2">Cluster 2: Energy, Midstream &amp; Pipelines</option>
+              <option value="3">Cluster 3: Power &amp; Utilities</option>
+              <option value="4">Cluster 4: Healthcare, Bio &amp; Devices</option>
+              <option value="5">Cluster 5: Nuclear &amp; Uranium Infrastructure</option>
+              <option value="6">Cluster 6: Big Tech, Fintech &amp; Platforms</option>
+              <option value="7">Cluster 7: Next-Gen Tech &amp; Robotics</option>
+              <option value="8">Cluster 8: Crypto, Mining &amp; Commodities</option>
+            </select>
+          </div>
+          <div class="modal-form-group">
+            <label class="modal-label">INITIAL SHARES (Optional, default 0 for Watchlist)</label>
+            <input type="number" id="modal-shares-input" class="modal-input" placeholder="0" min="0" value="0" />
+          </div>
+          <div id="modal-error-msg" class="modal-error hidden"></div>
+        </div>
+        <div class="modal-actions">
+          <button id="modal-cancel-btn" class="tactical-btn">CANCEL</button>
+          <button id="modal-submit-btn" class="tactical-btn text-cyan">ADD TO UNIVERSE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/pages/war-room/client.js"></script>
+</body>
+</html>

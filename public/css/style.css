@@ -1,0 +1,147 @@
+:root {
+  --bg-core: #07090e;
+  --bg-nav: #0d121d;
+  --border-nav: rgba(56, 189, 248, 0.15);
+  --cyan-accent: #38bdf8;
+  --text-primary: #f8fafc;
+  --text-muted: #64748b;
+  --green-online: #22c55e;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body.warroom-body {
+  background-color: var(--bg-core);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.shell-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.top-nav {
+  height: 56px;
+  background-color: var(--bg-nav);
+  border-bottom: 1px solid var(--border-nav);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  user-select: none;
+  z-index: 10;
+}
+
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo {
+  font-size: 1.4rem;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--text-primary);
+}
+
+.brand-sub {
+  font-size: 0.65rem;
+  font-family: monospace;
+  color: var(--cyan-accent);
+  letter-spacing: 0.1em;
+}
+
+.plugin-tabs {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.plugin-tab-btn {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  color: #94a3b8;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.plugin-tab-btn:hover {
+  background: rgba(56, 189, 248, 0.1);
+  color: #f1f5f9;
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.plugin-tab-btn.active {
+  background: rgba(56, 189, 248, 0.2);
+  color: var(--cyan-accent);
+  border-color: var(--cyan-accent);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+}
+
+.nav-telemetry {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: monospace;
+}
+
+.telemetry-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.telemetry-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.telemetry-val {
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.telemetry-val.live {
+  color: var(--green-online);
+}
+
+.page-viewport {
+  flex: 1;
+  width: 100%;
+  height: calc(100vh - 56px);
+  background-color: var(--bg-core);
+}
+
+#plugin-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}

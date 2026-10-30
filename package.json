@@ -1,0 +1,26 @@
+{
+  "name": "pierre-stock-warroom",
+  "version": "1.0.0",
+  "description": "Pierre Stock War Room - Pluggable Express + D3.js 40-Asset Tactical Dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "openclaw",
+    "dashboard",
+    "war-room",
+    "stocks",
+    "d3",
+    "express"
+  ],
+  "author": "Pierre",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "d3": "^7.9.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2"
+  }
+}

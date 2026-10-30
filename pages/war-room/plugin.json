@@ -1,0 +1,8 @@
+{
+  "id": "war-room",
+  "name": "40-Asset War Room",
+  "description": "Live Agent Scene, 8 Thematic Clusters, & Inline Portfolio Manager",
+  "icon": "shield",
+  "order": 1,
+  "version": "1.0.0"
+}

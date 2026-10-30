@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Overview</title>
+  <link rel="stylesheet" href="/pages/overview/style.css">
+  <script src="/vendor/d3/d3.min.js"></script>
+</head>
+<body>
+  <div class="overview-container">
+    <header class="page-header">
+      <div class="header-left">
+        <h2>TACTICAL CORE // SYSTEM OVERVIEW</h2>
+        <span class="sub-badge">OPENCLAW NODE READY</span>
+      </div>
+      <div class="header-right">
+        <span class="pulse-indicator"></span>
+        <span id="gateway-status">CHECKING GATEWAY...</span>
+      </div>
+    </header>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">CLUSTER UNIVERSE</div>
+        <div class="stat-val text-cyan">8 CLUSTERS</div>
+        <div class="stat-sub">40 Targeted Tickers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">SENTIMENT HARVESTER</div>
+        <div class="stat-val text-green">PASSIVE DAEMON</div>
+        <div class="stat-sub">CrowdSentinel Ready</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">UI ARCHITECTURE</div>
+        <div class="stat-val text-amber">PLUGGABLE D3</div>
+        <div class="stat-sub">Express v4 / D3 v7</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">WAR ROOM ENGINE</div>
+        <div class="stat-val text-purple">PHASE 1-2 READY</div>
+        <div class="stat-sub">Pending Phase 3 API</div>
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <div class="section-title">WAR ROOM CLUSTERING TELEMETRY PREVIEW</div>
+      <div id="radar-chart"></div>
+    </div>
+  </div>
+  <script src="/pages/overview/client.js"></script>
+</body>
+</html>
